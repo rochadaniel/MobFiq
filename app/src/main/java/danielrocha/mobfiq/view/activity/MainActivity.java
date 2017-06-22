@@ -2,6 +2,7 @@ package danielrocha.mobfiq.view.activity;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +16,7 @@ import java.util.Observer;
 import danielrocha.mobfiq.R;
 import danielrocha.mobfiq.adapter.CategoriesAdapter;
 import danielrocha.mobfiq.databinding.ActivityMainBinding;
+import danielrocha.mobfiq.model.ParamsAPI;
 import danielrocha.mobfiq.model.SubCategory;
 import danielrocha.mobfiq.view.fragment.ProductsListFragment;
 import danielrocha.mobfiq.viewmodel.MainViewModel;
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private ActivityMainBinding mainActivityBinding;
     private MainViewModel mainViewModel;
     private ProductsListFragment productsListFragment;
+    private ParamsAPI paramsAPI = new ParamsAPI();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +35,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         setSupportActionBar(mainActivityBinding.toolbar);
         setupList(mainActivityBinding.recyclerCategories);
         setupObserver(mainViewModel);
-
-        if (savedInstanceState == null) {
-            productsListFragment = (ProductsListFragment)
-                    getSupportFragmentManager().findFragmentById(R.id.products_fragment);
-        }
+        setupProductFragment();
 
         new Thread(() -> {
                 try {
@@ -70,6 +69,13 @@ public class MainActivity extends AppCompatActivity implements Observer {
         observable.addObserver(this);
     }
 
+    private void setupProductFragment() {
+        productsListFragment = ProductsListFragment.newInstance(paramsAPI);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_placeholder, productsListFragment);
+        ft.commit();
+    }
     @Override protected void onDestroy() {
         super.onDestroy();
         mainViewModel.reset();

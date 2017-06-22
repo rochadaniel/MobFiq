@@ -7,6 +7,9 @@
         <variable
             name="productViewModel"
             type="danielrocha.mobfiq.viewmodel.ProductsListViewModel"/>
+        <variable
+            name="paramsAPI"
+            type="danielrocha.mobfiq.model.ParamsAPI"/>
     </data>
 
     <LinearLayout
@@ -36,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/try_again"
-                    android:onClick="@{(v) -> productViewModel.getItens()}"/>
+                    android:onClick="@{(v) -> productViewModel.getItens(paramsAPI)}"/>
 
             </LinearLayout>
 

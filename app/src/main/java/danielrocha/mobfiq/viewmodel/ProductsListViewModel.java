@@ -4,12 +4,14 @@ import android.content.Context;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
 import danielrocha.mobfiq.model.ItemResult;
+import danielrocha.mobfiq.model.ParamsAPI;
 import danielrocha.mobfiq.model.Product;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -67,7 +69,8 @@ public class ProductsListViewModel extends Observable {
         context = null;
     }
 
-    public void getItens() {
+    public void getItens(ParamsAPI paramsAPI) {
+        Toast.makeText(context, "Teste: " + paramsAPI.getSize(), Toast.LENGTH_SHORT).show();
         ItemResult itemResult = new ItemResult();
         List<Product> productList = new ArrayList<>();
 

@@ -16,6 +16,7 @@ import java.util.Observer;
 import danielrocha.mobfiq.R;
 import danielrocha.mobfiq.adapter.ProductsAdapter;
 import danielrocha.mobfiq.databinding.FragmentProductListBinding;
+import danielrocha.mobfiq.model.ParamsAPI;
 import danielrocha.mobfiq.viewmodel.ProductsListViewModel;
 
 /**
@@ -24,12 +25,31 @@ import danielrocha.mobfiq.viewmodel.ProductsListViewModel;
 
 public class ProductsListFragment extends Fragment implements Observer {
 
-    FragmentProductListBinding fragmentProductListBinding;
-    ProductsListViewModel productsListViewModel;
+    private FragmentProductListBinding fragmentProductListBinding;
+    private ProductsListViewModel productsListViewModel;
+    //private ParamsAPI paramsAPI;
+    public static final String API_QUERY_EXTRA = "API_QUERY_EXTRA";
 
-    public static ProductsListFragment newInstance() {
-        return new ProductsListFragment();
+    public static ProductsListFragment newInstance(ParamsAPI paramsAPI) {
+        ProductsListFragment productsListFragment = new ProductsListFragment();
+
+        Bundle args = new Bundle();
+        args.putSerializable(API_QUERY_EXTRA, paramsAPI);
+        productsListFragment.setArguments(args);
+
+        return productsListFragment;
     }
+
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        if(savedInstanceState == null) {
+//            Bundle args = getArguments();
+//            paramsAPI = args == null ? new ParamsAPI() : (ParamsAPI)args.getSerializable(API_QUERY_EXTRA);
+//        } else {
+//            paramsAPI = (ParamsAPI)savedInstanceState.getSerializable(API_QUERY_EXTRA);
+//        }
+//    }
 
     @Nullable
     @Override
@@ -42,6 +62,13 @@ public class ProductsListFragment extends Fragment implements Observer {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState == null) {
+            Bundle args = getArguments();
+            fragmentProductListBinding.setParamsAPI(args == null ? new ParamsAPI() : (ParamsAPI)args.getSerializable(API_QUERY_EXTRA));
+        } else {
+            fragmentProductListBinding.setParamsAPI((ParamsAPI)savedInstanceState.getSerializable(API_QUERY_EXTRA));
+        }
+
         setupList(fragmentProductListBinding.recyclerProducts);
         setupObserver(productsListViewModel);
         new Thread(() -> {
@@ -50,8 +77,14 @@ public class ProductsListFragment extends Fragment implements Observer {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                getActivity().runOnUiThread( () -> productsListViewModel.getItens() );
+                getActivity().runOnUiThread( () -> productsListViewModel.getItens(fragmentProductListBinding.getParamsAPI()) );
         }).start();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(API_QUERY_EXTRA, fragmentProductListBinding.getParamsAPI());
     }
 
     private void initDataBinding(LayoutInflater inflater, ViewGroup container) {
