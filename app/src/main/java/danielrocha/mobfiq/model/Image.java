@@ -3,11 +3,13 @@ package danielrocha.mobfiq.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by danielrocha on 22/06/17.
  */
 
-public class Image {
+public class Image implements Serializable {
     @SerializedName("ImageUrl")
     @Expose
     private String imageUrl;

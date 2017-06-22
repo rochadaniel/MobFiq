@@ -3,13 +3,14 @@ package danielrocha.mobfiq.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by danielrocha on 22/06/17.
  */
 
-public class Categories {
+public class Categories implements Serializable {
     @SerializedName("Categories")
     @Expose
     private List<Category> categories = null;

@@ -3,11 +3,13 @@ package danielrocha.mobfiq.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by danielrocha on 22/06/17.
  */
 
-public class SearchCriteria {
+public class SearchCriteria implements Serializable {
     @SerializedName("Query")
     @Expose
     private Object query;

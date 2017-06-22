@@ -3,6 +3,7 @@ package danielrocha.mobfiq.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * Created by danielrocha on 22/06/17.
  */
 
-public class Sku {
+public class Sku implements Serializable {
     @SerializedName("Id")
     @Expose
     private String id;

@@ -3,11 +3,13 @@ package danielrocha.mobfiq.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by danielrocha on 22/06/17.
  */
 
-public class Seller {
+public class Seller implements Serializable {
     @SerializedName("Id")
     @Expose
     private String id;

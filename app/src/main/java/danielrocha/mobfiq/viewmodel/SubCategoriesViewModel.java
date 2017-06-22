@@ -12,23 +12,11 @@ import danielrocha.mobfiq.model.SubCategory;
  * Created by danielrocha on 22/06/17.
  */
 
-public class SubCategoriesViewModel extends Observable {
-    private List<SubCategory> subCategoryList;
+public class SubCategoriesViewModel {
     private Context context;
 
     public SubCategoriesViewModel(Context context) {
         this.context = context;
-        this.subCategoryList = new ArrayList<>();
-    }
-
-    private void changeDataSet(List<SubCategory> subCategoryList) {
-        this.subCategoryList = subCategoryList;
-        setChanged();
-        notifyObservers();
-    }
-
-    public List<SubCategory> getSubCategoryList() {
-        return subCategoryList;
     }
 
 }

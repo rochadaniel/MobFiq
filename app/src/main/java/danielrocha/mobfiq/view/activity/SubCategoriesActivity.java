@@ -10,11 +10,14 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observer;
 
 import danielrocha.mobfiq.R;
 import danielrocha.mobfiq.adapter.SubCategoriesAdapter;
 import danielrocha.mobfiq.databinding.ActivitySubCategoriesBinding;
+import danielrocha.mobfiq.model.ParamsAPI;
 import danielrocha.mobfiq.model.SubCategory;
+import danielrocha.mobfiq.view.fragment.ProductsListFragment;
 import danielrocha.mobfiq.viewmodel.SubCategoriesViewModel;
 
 public class SubCategoriesActivity extends AppCompatActivity {
@@ -69,11 +72,18 @@ public class SubCategoriesActivity extends AppCompatActivity {
 
 
     private void setupList(List<SubCategory> subCategoryList, RecyclerView recyclerCategories) {
-        SubCategoriesAdapter adapter = new SubCategoriesAdapter(subCategoryList, (view, subCategory) ->
-                Toast.makeText(SubCategoriesActivity.this, subCategory.getName(),
-                        Toast.LENGTH_SHORT).show()
-        );
+        SubCategoriesAdapter adapter = new SubCategoriesAdapter(subCategoryList, (view, subCategory) -> {
+            Intent searchResultIntent = new Intent(SubCategoriesActivity.this, SearchResultActivity.class);
+
+            ParamsAPI paramsAPI = new ParamsAPI();
+            paramsAPI.setQuery(subCategory.getRedirect().getSearchCriteria().getApiQuery());
+            searchResultIntent.putExtra(ProductsListFragment.API_QUERY_EXTRA, paramsAPI);
+            searchResultIntent.putExtra(SearchResultActivity.SEARCH_TITLE_EXTRA, subCategory.getName());
+
+            startActivity(searchResultIntent);
+        });
         recyclerCategories.setAdapter(adapter);
         recyclerCategories.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
     }
+
 }

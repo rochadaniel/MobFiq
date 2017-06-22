@@ -11,6 +11,8 @@ import java.util.Observable;
 
 import danielrocha.mobfiq.R;
 import danielrocha.mobfiq.model.Category;
+import danielrocha.mobfiq.model.Redirect_;
+import danielrocha.mobfiq.model.SearchCriteria_;
 import danielrocha.mobfiq.model.SubCategory;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -79,6 +81,11 @@ public class MainViewModel extends Observable {
             for (int j = 0; j < 10; j++) {
                 SubCategory subCategory = new SubCategory();
                 subCategory.setName("SubCategoria: " + j);
+                Redirect_ redirect_ = new Redirect_();
+                SearchCriteria_ searchCriteria_ = new SearchCriteria_();
+                searchCriteria_.setApiQuery("beleza/acessorios-de-beleza?map=c,c");
+                redirect_.setSearchCriteria(searchCriteria_);
+                subCategory.setRedirect(redirect_);
                 subCategoryList.add(subCategory);
                 category.setSubCategories(subCategoryList);
             }
