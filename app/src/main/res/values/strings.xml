@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">MobFiq</string>
+    <string name="try_again">Tentar Novamente</string>
+    <string name="without_network_connection">Sem conexão com a internet</string>
+    <string name="without_product">Nenhum produto encontrado</string>
+    <string name="without_category">Nenhuma categoria encontrada</string>
+    <string name="all_categories">Todas as categorias</string>
 </resources>
