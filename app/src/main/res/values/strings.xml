@@ -5,4 +5,6 @@
     <string name="without_product">Nenhum produto encontrado</string>
     <string name="without_category">Nenhuma categoria encontrada</string>
     <string name="all_categories">Todas as categorias</string>
+    <string name="search">Buscar</string>
+    <string name="search_without_text_message">Busca obrigatória</string>
 </resources>
