@@ -10,12 +10,13 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/item_product">
+        android:layout_height="120dp"
+        android:id="@+id/item_product"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/textProductName"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{itemViewModel.name}" />
     </LinearLayout>

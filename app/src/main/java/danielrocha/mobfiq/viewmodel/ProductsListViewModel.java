@@ -25,6 +25,8 @@ public class ProductsListViewModel extends Observable {
     private List<Product> productList;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private Context context;
+    private ItemResult itemResult;
+    public int totalPages;
 
     public ProductsListViewModel(Context context) {
         this.context = context;
@@ -70,17 +72,16 @@ public class ProductsListViewModel extends Observable {
     }
 
     public void getItens(ParamsAPI paramsAPI) {
-        Toast.makeText(context, "Teste: " + paramsAPI.getSize(), Toast.LENGTH_SHORT).show();
-        ItemResult itemResult = new ItemResult();
-        List<Product> productList = new ArrayList<>();
+        itemResult = new ItemResult();
+        itemResult.setTotal(375);
+        totalPages = itemResult.getTotal();
 
-        Product p1 = new Product();
-        p1.setName("p1");
-        productList.add(p1);
 
-        Product p2 = new Product();
-        p2.setName("p2");
-        productList.add(p2);
+        for (int i = 0; i < paramsAPI.getSize(); i++) {
+            Product p1 = new Product();
+            p1.setName(paramsAPI.getOffSet() + " - Produto: " + i);
+            productList.add(p1);
+        }
 
         itemResult.setProducts(productList);
 

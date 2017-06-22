@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class ParamsAPI implements Serializable {
     private String query = "";
-    private int offSet = 0, size = 0;
+    private int offSet = 0, size = 10;
 
     public String getQuery() {
         return query;

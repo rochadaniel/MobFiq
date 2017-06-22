@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -16,6 +17,7 @@ import java.util.Observer;
 import danielrocha.mobfiq.R;
 import danielrocha.mobfiq.adapter.ProductsAdapter;
 import danielrocha.mobfiq.databinding.FragmentProductListBinding;
+import danielrocha.mobfiq.listener.EndlessRecyclerOnScrollListener;
 import danielrocha.mobfiq.model.ParamsAPI;
 import danielrocha.mobfiq.viewmodel.ProductsListViewModel;
 
@@ -96,7 +98,24 @@ public class ProductsListFragment extends Fragment implements Observer {
     private void setupList(RecyclerView recyclerProducts) {
         ProductsAdapter adapter = new ProductsAdapter();
         recyclerProducts.setAdapter(adapter);
-        recyclerProducts.setLayoutManager(new GridLayoutManager(getActivity().getApplicationContext(), 2));
+        GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 2);
+        recyclerProducts.setLayoutManager(mLayoutManager);
+        recyclerProducts.addOnScrollListener(new EndlessRecyclerOnScrollListener(mLayoutManager) {
+
+            @Override
+            public void onLoadMore(int current_page) {
+                if(current_page <= getTotalPages()) {
+                    Toast.makeText(getActivity(), "Pag.: " + current_page, Toast.LENGTH_SHORT).show();
+                    ParamsAPI paramsAPI = new ParamsAPI();
+                    paramsAPI.setSize(10);
+                    paramsAPI.setOffSet(productsListViewModel.getProductList().size());
+                    productsListViewModel.getItens(paramsAPI);
+                    //productsListViewModel.getgetMovies(current_page);
+                } else {
+                    Toast.makeText(getActivity(), "Total de pag.: " + getTotalPages(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public void setupObserver(Observable observable) {
@@ -114,5 +133,9 @@ public class ProductsListFragment extends Fragment implements Observer {
             ProductsListViewModel productsListViewModel = (ProductsListViewModel) observable;
             productsAdapter.setProductList(productsListViewModel.getProductList());
         }
+    }
+
+    public int getTotalPages() {
+        return productsListViewModel.totalPages/10;
     }
 }
