@@ -11,6 +11,7 @@ import java.util.Observable;
 
 import danielrocha.mobfiq.R;
 import danielrocha.mobfiq.model.Category;
+import danielrocha.mobfiq.model.SubCategory;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -69,16 +70,20 @@ public class MainViewModel extends Observable {
     }
 
     public void getCategories() {
-
         List<Category> categoryList = new ArrayList<>();
 
-        Category c1 = new Category();
-        c1.setName("c1");
-        categoryList.add(c1);
-
-        Category c2 = new Category();
-        c2.setName("c2");
-        categoryList.add(c2);
+        for (int i = 0; i < 20; i++) {
+            Category category = new Category();
+            category.setName("Categoria: " + i);
+            List<SubCategory> subCategoryList = new ArrayList<>();
+            for (int j = 0; j < 10; j++) {
+                SubCategory subCategory = new SubCategory();
+                subCategory.setName("SubCategoria: " + j);
+                subCategoryList.add(subCategory);
+                category.setSubCategories(subCategoryList);
+            }
+            categoryList.add(category);
+        }
 
         changeDataSet(categoryList);
         hasList.set(View.VISIBLE);

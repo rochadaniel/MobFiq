@@ -3,17 +3,17 @@
     <data>
         <variable
             name="itemViewModel"
-            type="danielrocha.mobfiq.viewmodel.listitem.ItemCategoriesViewModel"/>
+            type="danielrocha.mobfiq.viewmodel.listitem.ItemSubCategoriesViewModel"/>
     </data>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/item_category"
+        android:id="@+id/item_sub_category"
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/textCategoryName"
+            android:id="@+id/textSubCategoryName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{itemViewModel.name}" />

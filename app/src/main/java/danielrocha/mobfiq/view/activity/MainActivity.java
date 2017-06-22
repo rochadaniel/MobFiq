@@ -1,5 +1,6 @@
 package danielrocha.mobfiq.view.activity;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,12 +8,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.Observable;
 import java.util.Observer;
 
 import danielrocha.mobfiq.R;
 import danielrocha.mobfiq.adapter.CategoriesAdapter;
 import danielrocha.mobfiq.databinding.ActivityMainBinding;
+import danielrocha.mobfiq.model.SubCategory;
 import danielrocha.mobfiq.view.fragment.ProductsListFragment;
 import danielrocha.mobfiq.viewmodel.MainViewModel;
 
@@ -53,9 +56,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
     private void setupList(RecyclerView recyclerCategories) {
-        CategoriesAdapter adapter = new CategoriesAdapter((view, category) ->
-                Toast.makeText(MainActivity.this, "Nome: " + category.getName(), Toast.LENGTH_SHORT).show()
-        );
+        CategoriesAdapter adapter = new CategoriesAdapter((view, category) -> {
+            Intent subCategoriesIntent = new Intent(this, SubCategoriesActivity.class);
+            subCategoriesIntent.putExtra("subCategoryList", (Serializable) category.getSubCategories());
+            subCategoriesIntent.putExtra("categoryName", category.getName());
+            startActivity(subCategoriesIntent);
+        });
         recyclerCategories.setAdapter(adapter);
         recyclerCategories.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
     }
