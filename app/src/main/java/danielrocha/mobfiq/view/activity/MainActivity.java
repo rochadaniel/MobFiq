@@ -58,8 +58,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private void setupList(RecyclerView recyclerCategories) {
         CategoriesAdapter adapter = new CategoriesAdapter((view, category) -> {
             Intent subCategoriesIntent = new Intent(this, SubCategoriesActivity.class);
-            subCategoriesIntent.putExtra("subCategoryList", (Serializable) category.getSubCategories());
-            subCategoriesIntent.putExtra("categoryName", category.getName());
+            subCategoriesIntent.putExtra(SubCategoriesActivity.SUB_CATEGORY_LIST_EXTRA, (Serializable) category.getSubCategories());
+            subCategoriesIntent.putExtra(SubCategoriesActivity.CATEGORY_EXTRA, category.getName());
             startActivity(subCategoriesIntent);
         });
         recyclerCategories.setAdapter(adapter);

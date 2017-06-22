@@ -18,7 +18,7 @@ import danielrocha.mobfiq.model.SubCategory;
 import danielrocha.mobfiq.viewmodel.SubCategoriesViewModel;
 
 public class SubCategoriesActivity extends AppCompatActivity {
-
+    public static final String CATEGORY_EXTRA = "CATEGORY_EXTRA", SUB_CATEGORY_LIST_EXTRA = "subCategoryList";
     private ActivitySubCategoriesBinding activitySubCategoriesBinding;
     private SubCategoriesViewModel subCategoriesViewModel;
     private List<SubCategory> subCategoryList = new ArrayList<>();
@@ -31,15 +31,25 @@ public class SubCategoriesActivity extends AppCompatActivity {
         if(savedInstanceState == null) {
             Intent intent = getIntent();
 
-            if (intent.getSerializableExtra("subCategoryList") != null)
-                subCategoryList = (List<SubCategory>) getIntent().getSerializableExtra("subCategoryList");
+            if (intent.getSerializableExtra(SUB_CATEGORY_LIST_EXTRA) != null)
+                subCategoryList = (List<SubCategory>) getIntent().getSerializableExtra(SUB_CATEGORY_LIST_EXTRA);
 
-            if(intent.getStringExtra("categoryName") != null)
-                categoryName = intent.getStringExtra("categoryName");
+            if(intent.getStringExtra(CATEGORY_EXTRA) != null)
+                categoryName = intent.getStringExtra(CATEGORY_EXTRA);
+        } else {
+            subCategoryList = (List<SubCategory>) savedInstanceState.getSerializable(SUB_CATEGORY_LIST_EXTRA);
+            categoryName = savedInstanceState.getString(CATEGORY_EXTRA);
         }
         initToolbar();
         setupList(subCategoryList, activitySubCategoriesBinding.recyclerSubCategories);
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(CATEGORY_EXTRA, categoryName);
+        outState.putSerializable(SUB_CATEGORY_LIST_EXTRA, (ArrayList<SubCategory>)subCategoryList);
+        super.onSaveInstanceState(outState);
     }
 
     private void initDataBinding() {
