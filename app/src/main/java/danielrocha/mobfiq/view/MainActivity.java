@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     private ActivityMainBinding mainActivityBinding;
     private MainViewModel mainViewModel;
+    private ProductsListFragment productsListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,21 +32,19 @@ public class MainActivity extends AppCompatActivity implements Observer {
         setupList(mainActivityBinding.recyclerCategories);
         setupObserver(mainViewModel);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        if (savedInstanceState == null) {
+            productsListFragment = (ProductsListFragment)
+                    getSupportFragmentManager().findFragmentById(R.id.products_fragment);
+        }
+
+        new Thread(() -> {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mainViewModel.getCategories();
-                    }
-                });
-            }
+                runOnUiThread( () -> mainViewModel.getCategories() );
+
         }).start();
     }
 
