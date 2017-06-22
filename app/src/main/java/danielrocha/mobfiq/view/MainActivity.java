@@ -3,12 +3,19 @@ package danielrocha.mobfiq.view;
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Toast;
 
 import java.util.Observable;
 import java.util.Observer;
 
 import danielrocha.mobfiq.R;
+import danielrocha.mobfiq.adapter.CategoriesAdapter;
 import danielrocha.mobfiq.databinding.ActivityMainBinding;
+import danielrocha.mobfiq.listener.CategoryOnItemClickListener;
+import danielrocha.mobfiq.model.Category;
 import danielrocha.mobfiq.viewmodel.MainViewModel;
 
 public class MainActivity extends AppCompatActivity implements Observer {
@@ -21,13 +28,39 @@ public class MainActivity extends AppCompatActivity implements Observer {
         super.onCreate(savedInstanceState);
         initDataBinding();
         setSupportActionBar(mainActivityBinding.toolbar);
+        setupList(mainActivityBinding.recyclerCategories);
         setupObserver(mainViewModel);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mainViewModel.getCategories();
+                    }
+                });
+            }
+        }).start();
     }
 
     private void initDataBinding() {
         mainActivityBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mainViewModel = new MainViewModel(MainActivity.this);
         mainActivityBinding.setMainViewModel(mainViewModel);
+    }
+
+    private void setupList(RecyclerView recyclerCategories) {
+        CategoriesAdapter adapter = new CategoriesAdapter((view, category) ->
+                Toast.makeText(MainActivity.this, "Nome: " + category.getName(), Toast.LENGTH_SHORT).show()
+        );
+        recyclerCategories.setAdapter(adapter);
+        recyclerCategories.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
     }
 
     public void setupObserver(Observable observable) {
@@ -40,6 +73,10 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
     @Override public void update(Observable observable, Object data) {
-
+        if (observable instanceof MainViewModel) {
+            CategoriesAdapter categoriesAdapter = (CategoriesAdapter) mainActivityBinding.recyclerCategories.getAdapter();
+            MainViewModel mainViewModel = (MainViewModel) observable;
+            categoriesAdapter.setCategoryList(mainViewModel.getCategoryList());
+        }
     }
 }
