@@ -11,7 +11,7 @@ import java.util.List;
 import danielrocha.mobfiq.R;
 import danielrocha.mobfiq.databinding.ItemProductListBinding;
 import danielrocha.mobfiq.model.Product;
-import danielrocha.mobfiq.viewmodel.ItemProductsViewModel;
+import danielrocha.mobfiq.viewmodel.listitem.ItemProductsViewModel;
 
 /**
  * Created by danielrocha on 22/06/17.

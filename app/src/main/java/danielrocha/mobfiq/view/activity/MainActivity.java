@@ -1,11 +1,10 @@
-package danielrocha.mobfiq.view;
+package danielrocha.mobfiq.view.activity;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.Toast;
 
 import java.util.Observable;
@@ -14,8 +13,7 @@ import java.util.Observer;
 import danielrocha.mobfiq.R;
 import danielrocha.mobfiq.adapter.CategoriesAdapter;
 import danielrocha.mobfiq.databinding.ActivityMainBinding;
-import danielrocha.mobfiq.listener.CategoryOnItemClickListener;
-import danielrocha.mobfiq.model.Category;
+import danielrocha.mobfiq.view.fragment.ProductsListFragment;
 import danielrocha.mobfiq.viewmodel.MainViewModel;
 
 public class MainActivity extends AppCompatActivity implements Observer {

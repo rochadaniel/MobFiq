@@ -3,7 +3,6 @@ package danielrocha.mobfiq.adapter;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.Collections;
@@ -13,7 +12,7 @@ import danielrocha.mobfiq.R;
 import danielrocha.mobfiq.databinding.ItemCategoryListBinding;
 import danielrocha.mobfiq.listener.CategoryOnItemClickListener;
 import danielrocha.mobfiq.model.Category;
-import danielrocha.mobfiq.viewmodel.ItemCategoriesViewModel;
+import danielrocha.mobfiq.viewmodel.listitem.ItemCategoriesViewModel;
 
 /**
  * Created by danielrocha on 22/06/17.

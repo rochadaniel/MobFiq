@@ -1,4 +1,4 @@
-package danielrocha.mobfiq.view;
+package danielrocha.mobfiq.view.fragment;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;

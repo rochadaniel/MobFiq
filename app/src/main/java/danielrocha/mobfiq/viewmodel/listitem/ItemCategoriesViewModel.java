@@ -1,4 +1,4 @@
-package danielrocha.mobfiq.viewmodel;
+package danielrocha.mobfiq.viewmodel.listitem;
 
 import android.content.Context;
 import android.databinding.BaseObservable;

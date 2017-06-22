@@ -93,7 +93,7 @@
 
             <fragment
                 android:id="@+id/products_fragment"
-                class="danielrocha.mobfiq.view.ProductsListFragment"
+                class="danielrocha.mobfiq.view.fragment.ProductsListFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
