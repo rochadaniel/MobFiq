@@ -82,7 +82,7 @@ public class ProductsListViewModel extends Observable {
         try {
             if(ConnectivityHelper.isConnected(context)) {
 
-                if(paramsAPI.getOffSet() == 0) {
+                if(isFirstTime(paramsAPI)) {
                     isLoading.set(View.VISIBLE);
                     hasError.set(View.GONE);
                     hasList.set(View.GONE);
@@ -104,9 +104,11 @@ public class ProductsListViewModel extends Observable {
                                         hasList.set(View.VISIBLE);
                                         isLoading.set(View.GONE);
                                     } else {
-                                        isLoading.set(View.GONE);
-                                        hasError.set(View.VISIBLE);
-                                        showError(context.getString(R.string.without_product));
+                                        if(isFirstTime(paramsAPI)) {
+                                            isLoading.set(View.GONE);
+                                            hasError.set(View.VISIBLE);
+                                            showError(context.getString(R.string.without_product));
+                                        }
                                     }
 
                                 }, Throwable ->
@@ -121,5 +123,9 @@ public class ProductsListViewModel extends Observable {
             ex.printStackTrace();
             showError(ex.getLocalizedMessage());
         }
+    }
+
+    public boolean isFirstTime(ParamsAPI paramsAPI) {
+        return paramsAPI.getOffSet() == 0;
     }
 }

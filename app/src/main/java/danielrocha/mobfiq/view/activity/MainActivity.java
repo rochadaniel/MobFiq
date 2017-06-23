@@ -41,15 +41,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         setupObserver(mainViewModel);
         setupProductFragment();
 
-        new Thread(() -> {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                runOnUiThread( () -> mainViewModel.getCategories() );
-
-        }).start();
+        mainViewModel.getCategories();
     }
 
     @Override

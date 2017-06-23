@@ -73,14 +73,7 @@ public class ProductsListFragment extends Fragment implements Observer {
 
         setupList(fragmentProductListBinding.recyclerProducts);
         setupObserver(productsListViewModel);
-        new Thread(() -> {
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                getActivity().runOnUiThread( () -> productsListViewModel.getItens(fragmentProductListBinding.getParamsAPI()) );
-        }).start();
+        productsListViewModel.getItens(fragmentProductListBinding.getParamsAPI());
     }
 
     @Override

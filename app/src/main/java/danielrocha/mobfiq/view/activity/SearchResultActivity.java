@@ -6,11 +6,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import java.util.ArrayList;
 import java.util.Observer;
 
 import danielrocha.mobfiq.R;
 import danielrocha.mobfiq.databinding.ActivitySearchResultBinding;
 import danielrocha.mobfiq.model.ParamsAPI;
+import danielrocha.mobfiq.model.SubCategory;
 import danielrocha.mobfiq.view.fragment.ProductsListFragment;
 import danielrocha.mobfiq.viewmodel.SearchResultViewModel;
 
@@ -41,6 +43,13 @@ public class SearchResultActivity extends AppCompatActivity {
         }
         initToolbar();
         setupProductFragment();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(SEARCH_TITLE_EXTRA, title);
+        outState.putSerializable(ProductsListFragment.API_QUERY_EXTRA, paramsAPI);
+        super.onSaveInstanceState(outState);
     }
 
     private void initDataBinding() {
