@@ -8,9 +8,13 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.pushwoosh.fragment.PushEventListener;
+import com.pushwoosh.fragment.PushFragment;
 
 import java.io.Serializable;
 import java.util.Observable;
@@ -24,13 +28,14 @@ import danielrocha.mobfiq.model.SubCategory;
 import danielrocha.mobfiq.view.fragment.ProductsListFragment;
 import danielrocha.mobfiq.viewmodel.MainViewModel;
 
-public class MainActivity extends AppCompatActivity implements Observer {
+public class MainActivity extends AppCompatActivity implements Observer, PushEventListener {
 
     private ActivityMainBinding mainActivityBinding;
     private MainViewModel mainViewModel;
     private ProductsListFragment productsListFragment;
     private ParamsAPI paramsAPI = new ParamsAPI();
     private SearchView searchView;
+    private String PUSH_TAG = "PushwooshSample";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
         setupList(mainActivityBinding.recyclerCategories);
         setupObserver(mainViewModel);
         setupProductFragment();
+
+        PushFragment.init(this);
 
         mainViewModel.getCategories();
     }
@@ -120,5 +127,47 @@ public class MainActivity extends AppCompatActivity implements Observer {
             MainViewModel mainViewModel = (MainViewModel) observable;
             categoriesAdapter.setCategoryList(mainViewModel.getCategoryList());
         }
+    }
+
+    /**
+     * PushEvent
+     */
+    @Override
+    public void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+
+        //Check if we've got new intent with a push notification
+        PushFragment.onNewIntent(this, intent);
+    }
+
+    @Override
+    public void doOnRegistered(String registrationId)
+    {
+        Log.i(PUSH_TAG, "Registered for pushes: " + registrationId);
+    }
+
+    @Override
+    public void doOnRegisteredError(String errorId)
+    {
+        Log.e(PUSH_TAG, "Failed to register for pushes: " + errorId);
+    }
+
+    @Override
+    public void doOnMessageReceive(String message)
+    {
+        Log.i(PUSH_TAG, "Notification opened: " + message);
+    }
+
+    @Override
+    public void doOnUnregistered(final String message)
+    {
+        Log.i(PUSH_TAG, "Unregistered from pushes: " + message);
+    }
+
+    @Override
+    public void doOnUnregisteredError(String errorId)
+    {
+        Log.e(PUSH_TAG, "Failed to unregister from pushes: " + errorId);
     }
 }

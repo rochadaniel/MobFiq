@@ -12,6 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+
+        <meta-data android:name="PW_APPID" android:value="0A902-56CFE" />
+        <meta-data android:name="PW_PROJECT_ID" android:value="A615391927887" />
+
         <activity
             android:name=".view.activity.MainActivity"
             android:screenOrientation="portrait">
