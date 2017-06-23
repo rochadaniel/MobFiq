@@ -5,7 +5,9 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.Collections;
@@ -20,29 +22,52 @@ import danielrocha.mobfiq.viewmodel.listitem.ItemProductsViewModel;
  * Created by danielrocha on 22/06/17.
  */
 
-public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ProductsViewHolder> {
+public class ProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Product> productList;
     private Context context;
+    public final int VIEW_TYPE_ITEM = 0;
+    public final int VIEW_TYPE_LOADING = 1;
+    public boolean isLoading;
 
     public ProductsAdapter(Context context) {
         this.productList = Collections.emptyList();
         this.context = context;
     }
 
-    @Override public ProductsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ItemProductListBinding itemProductListBinding =
-                DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_product_list,
-                        parent, false);
-        return new ProductsViewHolder(itemProductListBinding, context);
+    @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_ITEM) {
+            ItemProductListBinding itemProductListBinding =
+                    DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_product_list,
+                            parent, false);
+            return new ProductsViewHolder(itemProductListBinding, context);
+        } else if (viewType == VIEW_TYPE_LOADING) {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_loading_product_list, parent, false);
+            return new LoadingViewHolder(view);
+        }
+        return null;
     }
 
-    @Override public void onBindViewHolder(ProductsViewHolder holder, int position) {
-        holder.bindProduct(productList.get(position));
+    @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof ProductsViewHolder) {
+            ProductsViewHolder productsViewHolder = (ProductsViewHolder)holder;
+            productsViewHolder.bindProduct(productList.get(position));
+        } else if (holder instanceof LoadingViewHolder) {
+            LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
+            loadingViewHolder.progressBar.setIndeterminate(true);
+        }
     }
 
     @Override public int getItemCount() {
         return productList.size();
+    }
+
+    @Override public int getItemViewType(int position) {
+        return productList.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+    }
+
+    public void setLoaded() {
+        isLoading = false;
     }
 
     public void setProductList(List<Product> productList) {
@@ -50,11 +75,11 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         notifyDataSetChanged();
     }
 
-    public static class ProductsViewHolder extends RecyclerView.ViewHolder {
+    static class ProductsViewHolder extends RecyclerView.ViewHolder {
         ItemProductListBinding itemProductListBinding;
         private Context context;
 
-        public ProductsViewHolder(ItemProductListBinding itemProductListBinding, Context context) {
+        ProductsViewHolder(ItemProductListBinding itemProductListBinding, Context context) {
             super(itemProductListBinding.itemProduct);
             this.itemProductListBinding = itemProductListBinding;
             this.context = context;
@@ -82,6 +107,15 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
                 itemProductListBinding.textPrice.setTextColor(context.getResources().getColor(R.color.gray));
             }
             itemProductListBinding.getItemViewModel().hasPromotionFunction();
+        }
+    }
+
+    static class LoadingViewHolder extends RecyclerView.ViewHolder {
+        public ProgressBar progressBar;
+
+        public LoadingViewHolder(View itemView) {
+            super(itemView);
+            progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
         }
     }
 }

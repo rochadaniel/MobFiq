@@ -34,6 +34,7 @@ public class ProductsListViewModel extends Observable {
     private Context context;
     private ItemResult itemResult;
     public int totalPages;
+    private boolean firstTime = true;
 
     public ProductsListViewModel(Context context) {
         this.context = context;
@@ -82,7 +83,7 @@ public class ProductsListViewModel extends Observable {
         try {
             if(ConnectivityHelper.isConnected(context)) {
 
-                if(isFirstTime(paramsAPI)) {
+                if(firstTime) {
                     isLoading.set(View.VISIBLE);
                     hasError.set(View.GONE);
                     hasList.set(View.GONE);
@@ -99,12 +100,20 @@ public class ProductsListViewModel extends Observable {
                                             itemResult.getProducts().size() > 0) {
                                         this.itemResult = itemResult;
                                         totalPages = itemResult.getTotal();
+
+                                        if(!firstTime) {
+                                            //Removendo loading item
+                                            productList.remove(productList.size() - 1);
+                                        } else {
+                                           firstTime = false;
+                                        }
+
                                         productList.addAll(itemResult.getProducts());
                                         changeDataSet(productList);
                                         hasList.set(View.VISIBLE);
                                         isLoading.set(View.GONE);
                                     } else {
-                                        if(isFirstTime(paramsAPI)) {
+                                        if(firstTime) {
                                             isLoading.set(View.GONE);
                                             hasError.set(View.VISIBLE);
                                             showError(context.getString(R.string.without_product));
@@ -125,7 +134,11 @@ public class ProductsListViewModel extends Observable {
         }
     }
 
-    public boolean isFirstTime(ParamsAPI paramsAPI) {
-        return paramsAPI.getOffSet() == 0;
+    public boolean isFirstTime() {
+        return firstTime;
+    }
+
+    public void setFirstTime(boolean firstTime) {
+        this.firstTime = firstTime;
     }
 }

@@ -29,7 +29,7 @@ public class ProductsListFragment extends Fragment implements Observer {
 
     private FragmentProductListBinding fragmentProductListBinding;
     private ProductsListViewModel productsListViewModel;
-    //private ParamsAPI paramsAPI;
+    private ParamsAPI paramsAPI;
     public static final String API_QUERY_EXTRA = "API_QUERY_EXTRA";
     private final int pagSize = 10;
 
@@ -82,19 +82,36 @@ public class ProductsListFragment extends Fragment implements Observer {
         ProductsAdapter adapter = new ProductsAdapter(getActivity().getApplicationContext());
         recyclerProducts.setAdapter(adapter);
         GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 2);
+        mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if(adapter.getItemViewType(position) == adapter.VIEW_TYPE_LOADING) {
+                    return 2;
+                } else {
+                    return 1;
+                }
+            }
+        });
         recyclerProducts.setLayoutManager(mLayoutManager);
         recyclerProducts.addOnScrollListener(new EndlessRecyclerOnScrollListener(mLayoutManager) {
 
             @Override
             public void onLoadMore(int current_page) {
-                if(current_page <= getTotalPages()) {
-                    Toast.makeText(getActivity(), "Pag.: " + current_page, Toast.LENGTH_SHORT).show();
-                    ParamsAPI paramsAPI = new ParamsAPI();
+                ProductsAdapter productsAdapter = (ProductsAdapter) fragmentProductListBinding.recyclerProducts.getAdapter();
+                if(!productsAdapter.isLoading && current_page <= getTotalPages()) {
+                    //Toast.makeText(getActivity(), "Pag.: " + current_page, Toast.LENGTH_SHORT).show();
+                    productsAdapter.isLoading = true;
+                    paramsAPI = new ParamsAPI();
                     paramsAPI.setSize(pagSize);
                     paramsAPI.setOffSet(productsListViewModel.getProductList().size());
+
+                    //Adicionando loading item
+                    productsListViewModel.getProductList().add(null);
+                    productsAdapter.notifyItemInserted(productsListViewModel.getProductList().size() - 1);
+
                     productsListViewModel.getItens(paramsAPI);
                 } else {
-                    Toast.makeText(getActivity(), "Total de pag.: " + getTotalPages(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), "Total de pag.: " + getTotalPages(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -113,6 +130,11 @@ public class ProductsListFragment extends Fragment implements Observer {
         if (observable instanceof ProductsListViewModel) {
             ProductsAdapter productsAdapter = (ProductsAdapter) fragmentProductListBinding.recyclerProducts.getAdapter();
             ProductsListViewModel productsListViewModel = (ProductsListViewModel) observable;
+
+            if(!productsListViewModel.isFirstTime()) {
+                productsAdapter.setLoaded();
+            }
+
             productsAdapter.setProductList(productsListViewModel.getProductList());
         }
     }
