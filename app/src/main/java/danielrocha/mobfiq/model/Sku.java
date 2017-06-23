@@ -27,9 +27,6 @@ public class Sku implements Serializable {
     @SerializedName("Images")
     @Expose
     private List<Image> images = null;
-    @SerializedName("Variations")
-    @Expose
-    private HashMap<String, String> variations;
     @SerializedName("SkuName")
     @Expose
     private String skuName;
@@ -88,15 +85,7 @@ public class Sku implements Serializable {
     public void setImages(List<Image> images) {
         this.images = images;
     }
-
-    public HashMap<String, String> getVariations() {
-        return variations;
-    }
-
-    public void setVariations(HashMap<String, String> variations) {
-        this.variations = variations;
-    }
-
+    
     public String getSkuName() {
         return skuName;
     }

@@ -36,13 +36,6 @@ public class Product implements Serializable {
     @SerializedName("Categories")
     @Expose
     private List<String> categories = null;
-    @SerializedName("Specifications")
-    @Expose
-    private HashMap<String, String> specifications;
-    @SerializedName("Variations")
-    @Expose
-    private List<String> variations = null;
-    @SerializedName("Videos")
     @Expose
     private List<String> videos = null;
     @SerializedName("Images")
@@ -114,22 +107,6 @@ public class Product implements Serializable {
 
     public void setCategories(List<String> categories) {
         this.categories = categories;
-    }
-
-    public HashMap<String, String> getSpecifications() {
-        return specifications;
-    }
-
-    public void setSpecifications(HashMap<String, String> specifications) {
-        this.specifications = specifications;
-    }
-
-    public List<String> getVariations() {
-        return variations;
-    }
-
-    public void setVariations(List<String> variations) {
-        this.variations = variations;
     }
 
     public List<String> getVideos() {

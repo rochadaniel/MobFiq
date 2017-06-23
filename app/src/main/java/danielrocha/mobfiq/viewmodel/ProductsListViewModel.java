@@ -10,10 +10,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
+import danielrocha.mobfiq.R;
+import danielrocha.mobfiq.helper.ConnectivityHelper;
 import danielrocha.mobfiq.model.ItemResult;
 import danielrocha.mobfiq.model.ParamsAPI;
 import danielrocha.mobfiq.model.Product;
+import danielrocha.mobfiq.service.ProductsAPI;
+import danielrocha.mobfiq.service.ServiceGenerator;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by danielrocha on 22/06/17.
@@ -72,21 +79,47 @@ public class ProductsListViewModel extends Observable {
     }
 
     public void getItens(ParamsAPI paramsAPI) {
-        itemResult = new ItemResult();
-        itemResult.setTotal(375);
-        totalPages = itemResult.getTotal();
+        try {
+            if(ConnectivityHelper.isConnected(context)) {
 
+                if(paramsAPI.getOffSet() == 0) {
+                    isLoading.set(View.VISIBLE);
+                    hasError.set(View.GONE);
+                    hasList.set(View.GONE);
+                }
 
-        for (int i = 0; i < paramsAPI.getSize(); i++) {
-            Product p1 = new Product();
-            p1.setName(paramsAPI.getOffSet() + " - Produto: " + i);
-            productList.add(p1);
+                ProductsAPI productsAPI = ServiceGenerator.createService(ProductsAPI.class);
+
+                Disposable disposable = productsAPI.products(paramsAPI)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe( itemResult -> {
+                                    if (itemResult != null &&
+                                            itemResult.getProducts() != null &&
+                                            itemResult.getProducts().size() > 0) {
+                                        this.itemResult = itemResult;
+                                        totalPages = itemResult.getTotal();
+                                        productList.addAll(itemResult.getProducts());
+                                        changeDataSet(productList);
+                                        hasList.set(View.VISIBLE);
+                                        isLoading.set(View.GONE);
+                                    } else {
+                                        isLoading.set(View.GONE);
+                                        hasError.set(View.VISIBLE);
+                                        showError(context.getString(R.string.without_product));
+                                    }
+
+                                }, Throwable ->
+                                        showError(Throwable.getLocalizedMessage())
+                        );
+
+                compositeDisposable.add(disposable);
+            } else {
+                showError(context.getString(R.string.without_network_connection));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            showError(ex.getLocalizedMessage());
         }
-
-        itemResult.setProducts(productList);
-
-        changeDataSet(productList);
-        hasList.set(View.VISIBLE);
-        isLoading.set(View.GONE);
     }
 }
