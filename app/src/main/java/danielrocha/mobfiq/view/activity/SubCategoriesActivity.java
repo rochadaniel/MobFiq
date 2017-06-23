@@ -76,7 +76,7 @@ public class SubCategoriesActivity extends AppCompatActivity {
             Intent searchResultIntent = new Intent(SubCategoriesActivity.this, SearchResultActivity.class);
 
             ParamsAPI paramsAPI = new ParamsAPI();
-            paramsAPI.setQuery(subCategory.getRedirect().getSearchCriteria().getApiQuery());
+            paramsAPI.setQuery(subCategory.getRedirect().getSearchCriteria().getApiQuery().split("\\?")[0]);
             searchResultIntent.putExtra(ProductsListFragment.API_QUERY_EXTRA, paramsAPI);
             searchResultIntent.putExtra(SearchResultActivity.SEARCH_TITLE_EXTRA, subCategory.getName());
 

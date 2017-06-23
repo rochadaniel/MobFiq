@@ -85,7 +85,7 @@ public class Sku implements Serializable {
     public void setImages(List<Image> images) {
         this.images = images;
     }
-    
+
     public String getSkuName() {
         return skuName;
     }

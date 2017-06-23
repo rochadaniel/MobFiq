@@ -10,11 +10,17 @@ import java.util.List;
 import java.util.Observable;
 
 import danielrocha.mobfiq.R;
+import danielrocha.mobfiq.helper.ConnectivityHelper;
 import danielrocha.mobfiq.model.Category;
 import danielrocha.mobfiq.model.Redirect_;
 import danielrocha.mobfiq.model.SearchCriteria_;
 import danielrocha.mobfiq.model.SubCategory;
+import danielrocha.mobfiq.service.CategoriesAPI;
+import danielrocha.mobfiq.service.ServiceGenerator;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by danielrocha on 22/06/17.
@@ -72,28 +78,43 @@ public class MainViewModel extends Observable {
     }
 
     public void getCategories() {
-        List<Category> categoryList = new ArrayList<>();
+        try {
+            if(ConnectivityHelper.isConnected(context)) {
 
-        for (int i = 0; i < 20; i++) {
-            Category category = new Category();
-            category.setName("Categoria: " + i);
-            List<SubCategory> subCategoryList = new ArrayList<>();
-            for (int j = 0; j < 10; j++) {
-                SubCategory subCategory = new SubCategory();
-                subCategory.setName("SubCategoria: " + j);
-                Redirect_ redirect_ = new Redirect_();
-                SearchCriteria_ searchCriteria_ = new SearchCriteria_();
-                searchCriteria_.setApiQuery("beleza/acessorios-de-beleza?map=c,c");
-                redirect_.setSearchCriteria(searchCriteria_);
-                subCategory.setRedirect(redirect_);
-                subCategoryList.add(subCategory);
-                category.setSubCategories(subCategoryList);
+                isLoading.set(View.VISIBLE);
+                hasError.set(View.GONE);
+                hasList.set(View.GONE);
+
+                CategoriesAPI categoriesAPI = ServiceGenerator.createService(CategoriesAPI.class);
+
+                Disposable disposable = categoriesAPI.categories()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe( categories -> {
+                                    if (categories != null &&
+                                            categories.getCategories() != null &&
+                                            categories.getCategories().size() > 0) {
+                                        this.categoryList = categories.getCategories();
+                                        changeDataSet(this.categoryList);
+                                        hasList.set(View.VISIBLE);
+                                        isLoading.set(View.GONE);
+                                    } else {
+                                        isLoading.set(View.GONE);
+                                        hasError.set(View.VISIBLE);
+                                        showError(context.getString(R.string.without_product));
+                                    }
+
+                                }, Throwable ->
+                                        showError(Throwable.getLocalizedMessage())
+                        );
+
+                compositeDisposable.add(disposable);
+            } else {
+                showError(context.getString(R.string.without_network_connection));
             }
-            categoryList.add(category);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            showError(ex.getLocalizedMessage());
         }
-
-        changeDataSet(categoryList);
-        hasList.set(View.VISIBLE);
-        isLoading.set(View.GONE);
     }
 }
