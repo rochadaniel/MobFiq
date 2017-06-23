@@ -31,6 +31,7 @@ public class ProductsListFragment extends Fragment implements Observer {
     private ProductsListViewModel productsListViewModel;
     //private ParamsAPI paramsAPI;
     public static final String API_QUERY_EXTRA = "API_QUERY_EXTRA";
+    private final int pagSize = 10;
 
     public static ProductsListFragment newInstance(ParamsAPI paramsAPI) {
         ProductsListFragment productsListFragment = new ProductsListFragment();
@@ -41,17 +42,6 @@ public class ProductsListFragment extends Fragment implements Observer {
 
         return productsListFragment;
     }
-
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if(savedInstanceState == null) {
-//            Bundle args = getArguments();
-//            paramsAPI = args == null ? new ParamsAPI() : (ParamsAPI)args.getSerializable(API_QUERY_EXTRA);
-//        } else {
-//            paramsAPI = (ParamsAPI)savedInstanceState.getSerializable(API_QUERY_EXTRA);
-//        }
-//    }
 
     @Nullable
     @Override
@@ -89,7 +79,7 @@ public class ProductsListFragment extends Fragment implements Observer {
     }
 
     private void setupList(RecyclerView recyclerProducts) {
-        ProductsAdapter adapter = new ProductsAdapter();
+        ProductsAdapter adapter = new ProductsAdapter(getActivity().getApplicationContext());
         recyclerProducts.setAdapter(adapter);
         GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 2);
         recyclerProducts.setLayoutManager(mLayoutManager);
@@ -100,10 +90,9 @@ public class ProductsListFragment extends Fragment implements Observer {
                 if(current_page <= getTotalPages()) {
                     Toast.makeText(getActivity(), "Pag.: " + current_page, Toast.LENGTH_SHORT).show();
                     ParamsAPI paramsAPI = new ParamsAPI();
-                    paramsAPI.setSize(10);
+                    paramsAPI.setSize(pagSize);
                     paramsAPI.setOffSet(productsListViewModel.getProductList().size());
                     productsListViewModel.getItens(paramsAPI);
-                    //productsListViewModel.getgetMovies(current_page);
                 } else {
                     Toast.makeText(getActivity(), "Total de pag.: " + getTotalPages(), Toast.LENGTH_SHORT).show();
                 }
@@ -129,6 +118,6 @@ public class ProductsListFragment extends Fragment implements Observer {
     }
 
     public int getTotalPages() {
-        return productsListViewModel.totalPages/10;
+        return productsListViewModel.totalPages/pagSize;
     }
 }

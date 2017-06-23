@@ -7,4 +7,5 @@
     <string name="all_categories">Escolha uma categoria</string>
     <string name="search">Buscar</string>
     <string name="search_without_text_message">Busca obrigatória</string>
+    <string name="percent_off">OFF</string>
 </resources>
