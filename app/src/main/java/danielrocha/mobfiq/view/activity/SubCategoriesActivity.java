@@ -78,7 +78,7 @@ public class SubCategoriesActivity extends AppCompatActivity {
             ParamsAPI paramsAPI = new ParamsAPI();
             paramsAPI.setQuery(subCategory.getRedirect().getSearchCriteria().getApiQuery().split("\\?")[0]);
             searchResultIntent.putExtra(ProductsListFragment.API_QUERY_EXTRA, paramsAPI);
-            searchResultIntent.putExtra(SearchResultActivity.SEARCH_TITLE_EXTRA, subCategory.getName());
+            searchResultIntent.putExtra(SearchResultActivity.SEARCH_TITLE_EXTRA, subCategory.getRedirect().getTitle());
 
             startActivity(searchResultIntent);
         });
